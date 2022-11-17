@@ -1,0 +1,39 @@
+---
+title: "U.S. National Parks Biodiversity"
+author: "Brittany Adams"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r libraries}
+library(tidyverse)
+library(devtools)
+library(usethis)
+library(readr)
+```
+
+```{r github setup}
+create_github_token()
+gitcreds::gitcreds_set()
+gh::gh_whoami()
+git_sitrep()
+use_git()
+use_github()
+use_readme_md()
+use_ccby_license()
+```
+```{r data import}
+parks <- read_csv("data/parks.csv")
+species <- read_csv("data/species.csv")
+```
+
+```{r cleaning and wrangling}
+species <- select(species, -'...14')
+
+df <- full_join(species, parks, by = "Park Name")
+
+df$`Conservation Status` <- df$`Conservation Status` %>% replace_na("Safe")
+```
+
+
+
